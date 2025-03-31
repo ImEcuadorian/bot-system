@@ -1,4 +1,5 @@
 import socket
+import subprocess
 
 def start_client(ip='172.17.42.153', port=9999):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -14,7 +15,14 @@ def start_client(ip='172.17.42.153', port=9999):
 
         print(f"Received message: {message}")
 
-        response = f"Client received: {message}"
+        if message.lower() == "open_explorer":
+            try:
+                subprocess.Popen("explorer")
+                response = "File Explorer opened successfully."
+            except Exception as e:
+                response = f"Error opening File Explorer: {e}"
+        else:
+            response = f"Client received: {message}"
         client.send(response.encode())
 
     client.close()
